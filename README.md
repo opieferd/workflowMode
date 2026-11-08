@@ -4,10 +4,6 @@
 
 By [opieferd](https://github.com/opieferd).
 
-## Preview
-
-![workflowMode running on macOS](assets/worfkflow-preview.gif)
-
 
 Keep Claude Code, Codex, builds, downloads, and other tools running while the Mac's built-in display is dimmed to **0%**, its keyboard backlight is off, and `caffeinate` prevents idle sleep. Ordinary mouse and keyboard input is filtered for up to 60 minutes to avoid accidental interference.
 
@@ -146,9 +142,11 @@ DISPLAY_NAME = "Built-in Display"
 - For `Input tap unavailable`, grant Accessibility access to Terminal.
 - Some BetterDisplay versions may require permissions or licensing for CLI features. Zero brightness can be software dimming, not true physical backlight-off.
 
-## Preview (demo)
+## Preview in a macOS CLI:
 
 ![workflowMode preview on macOS](assets/worfkflow-preview.gif)
+
+Screen dimming is not shown here.
 
 ## License
 
