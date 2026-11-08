@@ -136,7 +136,7 @@ workflow            # 0% screen, 60-minute input filter
 
    ```bash
    sudo apt update
-   sudo apt install git python3 python3-venv brightnessctl pipewire-bin
+   sudo apt install git python3 python3-venv brightnessctl wireplumber
    ```
 
    Depending on your audio setup, `pactl` may require `pulseaudio-utils`; the script needs either working `wpctl` or `pactl`. Make sure `systemd-inhibit` is available (`systemd` package).
@@ -218,6 +218,7 @@ workflow            # 0% screen, 60-minute input filter
 4. Add a PowerShell `workflow` shortcut in your profile:
 
    ```powershell
+   New-Item -ItemType Directory -Path (Split-Path -Parent $PROFILE) -Force | Out-Null
    New-Item -ItemType File -Path $PROFILE -Force | Out-Null
    Add-Content -Path $PROFILE -Value 'function workflow { & "$HOME\workflow-mode\.venv\Scripts\python.exe" "$HOME\workflow-mode\workflow_windows.py" @args }'
    . $PROFILE
