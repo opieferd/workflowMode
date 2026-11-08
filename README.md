@@ -2,18 +2,6 @@
 
 **A lightweight macOS workflow mode for running AI coding tools and long-running jobs while reducing idle display power usage.**
 
-## Full download size (including dependencies):
-
-| Component | Estimated Download |
-|---|---:|
-| workflowMode repository | Under 50 KB |
-| BetterDisplay | ~28–30 MB |
-| Python 3 + dependencies | ~50–100 MB |
-| Node.js/npm + dependencies | ~100–180 MB |
-| PyObjC (Quartz, Cocoa, core) | ~5–15 MB |
-| Keyboard backlight utility | Under 5 MB |
-| **Total** | **~200–350 MB** |
-
 By [opieferd](https://github.com/opieferd).
 
 Keep Claude Code, Codex, builds, downloads, and other tools running while the Mac's built-in display is dimmed to **0%**, its keyboard backlight is off, and `caffeinate` prevents idle sleep. Ordinary mouse and keyboard input is filtered for up to 60 minutes to avoid accidental interference.
@@ -41,6 +29,19 @@ Keep Claude Code, Codex, builds, downloads, and other tools running while the Ma
 - [macos-keyboard-backlight](https://www.npmjs.com/package/macos-keyboard-backlight), providing `kbdlight`
 - Python package `pyobjc-framework-Quartz`
 - Accessibility permission for your terminal; Input Monitoring if prompted
+
+## Full download size (including dependencies):
+
+| Component | Estimated Download |
+|---|---:|
+| workflowMode repository | Under 50 KB |
+| BetterDisplay | ~28–30 MB |
+| Python 3 + dependencies | ~50–100 MB |
+| Node.js/npm + dependencies | ~100–180 MB |
+| PyObjC (Quartz, Cocoa, core) | ~5–15 MB |
+| Keyboard backlight utility | Under 5 MB |
+| **Total** | **~200–350 MB** |
+
 
 ## Full installation
 
