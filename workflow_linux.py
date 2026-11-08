@@ -196,11 +196,18 @@ def cleanup():
             print(f"Audio restore failed: {exc}")
 
     if inhibitor is not None and inhibitor.poll() is None:
-        inhibitor.terminate()
+        # Terminate the whole inhibitor command group, including sleep infinity.
+        try:
+            os.killpg(inhibitor.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
         try:
             inhibitor.wait(timeout=5)
         except subprocess.TimeoutExpired:
-            inhibitor.kill()
+            try:
+                os.killpg(inhibitor.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
             inhibitor.wait()
     print("Workflow Mode stopped.", flush=True)
 
@@ -244,7 +251,8 @@ def main():
     inhibitor = subprocess.Popen(
         ["systemd-inhibit", "--what=idle:sleep", "--mode=block",
          "--why=workflowMode is running long-lived AI tasks", "sleep", "infinity"],
-        stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True
+        stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True,
+        start_new_session=True
     )
     time.sleep(0.15)
     if inhibitor.poll() is not None:
