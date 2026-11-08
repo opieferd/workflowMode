@@ -42,29 +42,73 @@ Each platform can be installed from the same repository. Platform-specific relea
 - Python package `pyobjc-framework-Quartz`
 - Accessibility permission for your terminal; Input Monitoring if prompted
 
-## macOS estimated download size (including dependencies)
+## Downloads and estimated installation size
 
-| Component | Estimated Download |
-|---|---:|
-| workflowMode repository | Under 50 KB |
+Choose the package for your operating system below. These are **source ZIPs**, not standalone apps: Python and operating-system utilities must be installed separately.
+
+| Platform | Download release ZIP | Current ZIP download | Estimated additional setup downloads* |
+| --- | --- | ---: | ---: |
+| **macOS** | [workflowMode-macos.zip](https://github.com/opieferd/workflowMode/releases/download/v1.0.0-macos/workflowMode-macos.zip) | ~138 KiB | **~200–350 MB** |
+| **Linux** | [workflowMode-linux.zip](https://github.com/opieferd/workflowMode/releases/download/v1.0.0-linux/workflowMode-linux.zip) | ~138 KiB | **~10–150+ MB** |
+| **Windows** | [workflowMode-windows.zip](https://github.com/opieferd/workflowMode/releases/download/v1.0.0-windows/workflowMode-windows.zip) | ~138 KiB | **~60–180+ MB** |
+
+*The ZIP sizes were checked against the GitHub release assets (about 141 KB each; they may change when releases are updated). **Dependency estimates are rough planning ranges, not measured downloads or guarantees.** They vary substantially by distribution, existing installations, package versions, mirrors, architecture, and package manager. They exclude the operating system, OS updates, Homebrew's initial installation, and optional developer tools. Already have Python, Git, and audio tools? Your incremental download may be much smaller. Installed disk usage is higher than the compressed download size.*
+
+### macOS dependency breakdown (rough estimates)
+
+| Component | Estimated additional download |
+| --- | ---: |
+| Python 3 and supporting packages | ~50–100 MB |
+| Node.js/npm and supporting packages | ~100–180 MB |
 | BetterDisplay | ~28–30 MB |
-| Python 3 + dependencies | ~50–100 MB |
-| Node.js/npm + dependencies | ~100–180 MB |
-| PyObjC (Quartz, Cocoa, core) | ~5–15 MB |
+| PyObjC / Quartz bindings | ~5–15 MB |
 | Keyboard backlight utility | Under 5 MB |
-| **Total** | **~200–350 MB** |
+| workflowMode macOS ZIP | ~138 KiB |
+| **Typical fresh setup estimate** | **~200–350 MB** |
+
+### Linux dependency breakdown (rough estimates)
+
+| Component | Notes |
+| --- | --- |
+| Python 3 + venv + `python-xlib` | Commonly already available on developer systems |
+| `brightnessctl` | Small package, requires access to a supported backlight |
+| `systemd-inhibit` | Typically included with systemd |
+| `wpctl` or `pactl` | Often already supplied by desktop audio packages |
+| Git (if cloning) or unzip/curl (for ZIP) | Choose only the installation path you need |
+| **Typical additional download estimate** | **~10–150+ MB** (varies widely by Linux distribution) |
+
+### Windows dependency breakdown (rough estimates)
+
+| Component | Notes |
+| --- | --- |
+| Python 3 and its launcher | Required |
+| `pycaw` + pip dependencies | Small compared with Python itself |
+| Git for Windows | Optional if installing from the ZIP instead of cloning |
+| `SetThreadExecutionState`, WMI, PowerShell | Built into supported Windows installations |
+| **Typical additional download estimate** | **~60–180+ MB** (less when Python is already installed) |
 
 
 ## Installation: macOS
 
-### 1. Clone this repo
+### 1. Get the macOS files (choose one)
+
+**Option A — clone with Git** (recommended if you want to pull updates):
 
 ```bash
 git clone https://github.com/opieferd/workflowMode.git ~/workflow-mode
 cd ~/workflow-mode
 ```
 
-Install Homebrew from [brew.sh](https://brew.sh/) if necessary. Never use `sudo brew`.
+**Option B — download the macOS release ZIP** (no Git required):
+
+```bash
+mkdir -p ~/workflow-mode
+curl -fL https://github.com/opieferd/workflowMode/releases/download/v1.0.0-macos/workflowMode-macos.zip -o /tmp/workflowMode-macos.zip
+unzip -o /tmp/workflowMode-macos.zip -d ~/workflow-mode
+cd ~/workflow-mode
+```
+
+You can also download the ZIP from [Releases](https://github.com/opieferd/workflowMode/releases) and extract it manually. Install Homebrew from [brew.sh](https://brew.sh/) if necessary. Never use `sudo brew`.
 
 ### 2. Install dependencies
 
@@ -153,11 +197,27 @@ workflow            # 0% screen, 60-minute input filter
    sudo pacman -S git python brightnessctl wireplumber
    ```
 
-2. Clone and install Python dependencies:
+2. Download **the Linux version** (choose one), then install Python dependencies.
+
+   **Option A — clone:**
 
    ```bash
    git clone https://github.com/opieferd/workflowMode.git ~/workflow-mode
    cd ~/workflow-mode
+   ```
+
+   **Option B — Linux release ZIP** (requires `curl` and `unzip`, install those from your distro if missing):
+
+   ```bash
+   mkdir -p ~/workflow-mode
+   curl -fL https://github.com/opieferd/workflowMode/releases/download/v1.0.0-linux/workflowMode-linux.zip -o /tmp/workflowMode-linux.zip
+   unzip -o /tmp/workflowMode-linux.zip -d ~/workflow-mode
+   cd ~/workflow-mode
+   ```
+
+   **For either option, set up the virtual environment:**
+
+   ```bash
    python3 -m venv .venv
    .venv/bin/python -m pip install -r requirements_linux.txt
    ```
@@ -196,13 +256,29 @@ workflow            # 0% screen, 60-minute input filter
 
 **Support:** Windows 10/11 laptops with **WMI `WmiMonitorBrightness` and `WmiMonitorBrightnessMethods`** available for the internal display. This won't control most external monitors, and keyboard backlight controls are proprietary to each laptop brand.
 
-1. Install [Python 3](https://www.python.org/downloads/windows/) with the Python launcher (`py`), and [Git for Windows](https://git-scm.com/download/win).
+1. Install [Python 3](https://www.python.org/downloads/windows/) with the Python launcher (`py`). Install [Git for Windows](https://git-scm.com/download/win) **only if you plan to clone**, rather than download the Windows ZIP.
 
-2. From **PowerShell**:
+2. In **PowerShell**, choose one way to get the Windows files:
+
+   **Option A — clone with Git:**
 
    ```powershell
    git clone https://github.com/opieferd/workflowMode.git "$HOME\workflow-mode"
    cd "$HOME\workflow-mode"
+   ```
+
+   **Option B — download the Windows ZIP (Git not required):**
+
+   ```powershell
+   New-Item -ItemType Directory -Path "$HOME\workflow-mode" -Force | Out-Null
+   Invoke-WebRequest "https://github.com/opieferd/workflowMode/releases/download/v1.0.0-windows/workflowMode-windows.zip" -OutFile "$env:TEMP\workflowMode-windows.zip"
+   Expand-Archive -Path "$env:TEMP\workflowMode-windows.zip" -DestinationPath "$HOME\workflow-mode" -Force
+   cd "$HOME\workflow-mode"
+   ```
+
+   **For either option, install the Python dependencies:**
+
+   ```powershell
    py -m venv .venv
    .\.venv\Scripts\python.exe -m pip install -r requirements_windows.txt
    ```
@@ -246,7 +322,7 @@ GitHub Actions is configured to generate a **separate ZIP and GitHub release for
 | Linux | `v1.0.0-linux` | `workflowMode-linux.zip` |
 | Windows | `v1.0.0-windows` | `workflowMode-windows.zip` |
 
-These packages contain **source code + documentation**, not prebuilt standalone binaries. Python and platform dependencies are still required. Check the [Releases page](https://github.com/opieferd/workflowMode/releases) for actual availability. If no releases appear, run the **Publish platform releases** GitHub Actions workflow manually (or check that Actions has permission to write releases).
+These packages contain **source code + documentation**, not prebuilt standalone binaries. Python and platform dependencies are still required. See the [download-size comparison](#downloads-and-estimated-installation-size) and the macOS, Linux and Windows installation sections above. Check the [Releases page](https://github.com/opieferd/workflowMode/releases) for actual availability. If no releases appear, run the **Publish platform releases** GitHub Actions workflow manually (or check that Actions has permission to write releases).
 
 ## How it works (macOS)
 
