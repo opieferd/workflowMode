@@ -74,22 +74,8 @@ python3 -m venv .venv
 
 Go to **System Settings → Privacy & Security → Accessibility**, and enable **Terminal** (or your terminal application). Allow **Input Monitoring** if prompted. Reopen Terminal if the permission does not take effect.
 
-### 5. Verify your display
 
-```bash
-/Applications/BetterDisplay.app/Contents/MacOS/BetterDisplay get -identifiers
-/Applications/BetterDisplay.app/Contents/MacOS/BetterDisplay get -name="Built-in Display" -brightness
-```
-
-The script defaults to `DISPLAY_NAME = "Built-in Display"`. Change that constant in `workflow.py` if the CLI reports a different name. Confirm BetterDisplay can control the display at a **visible brightness setting** before trying black-out mode.
-
-Run a read-only check:
-
-```bash
-~/workflow-mode/.venv/bin/python ~/workflow-mode/workflow.py --check
-```
-
-### 6. Add the `workflow` alias (zsh)
+### 5. Add the `workflow` alias (zsh)
 
 ```bash
 echo 'alias workflow="$HOME/workflow-mode/.venv/bin/python $HOME/workflow-mode/workflow.py"' >> ~/.zshrc
