@@ -42,6 +42,7 @@ jobs:
               "linux": ("workflow_linux.py", "requirements_linux.txt", "README.md", "LICENSE"),
               "windows": ("workflow_windows.py", "requirements_windows.txt", "README.md", "LICENSE"),
           }
+          preview = Path("assets/worfkflow-preview.gif")
           out = Path("dist")
           out.mkdir(exist_ok=True)
           for platform, files in groups.items():
@@ -49,6 +50,8 @@ jobs:
               with ZipFile(archive, "w", ZIP_DEFLATED) as zf:
                   for filename in files:
                       zf.write(filename, filename)
+                  if preview.is_file():
+                      zf.write(preview, preview.as_posix())
               print(archive, archive.stat().st_size, "bytes")
           PY
 
