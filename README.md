@@ -1,7 +1,8 @@
 # workflowMode
 
 **A lightweight macOS workflow mode for running AI coding tools and long-running jobs while reducing idle display power usage.**
-Full download size (including dependencies):
+
+## Full download size (including dependencies):
 
 | Component | Estimated Download |
 |---|---:|
