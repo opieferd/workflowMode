@@ -1,6 +1,17 @@
 # workflowMode
 
 **A lightweight macOS workflow mode for running AI coding tools and long-running jobs while reducing idle display power usage.**
+Full download size (including dependencies):
+
+| Component | Estimated Download |
+|---|---:|
+| workflowMode repository | Under 50 KB |
+| BetterDisplay | ~28–30 MB |
+| Python 3 + dependencies | ~50–100 MB |
+| Node.js/npm + dependencies | ~100–180 MB |
+| PyObjC (Quartz, Cocoa, core) | ~5–15 MB |
+| Keyboard backlight utility | Under 5 MB |
+| **Total** | **~200–350 MB** |
 
 By [opieferd](https://github.com/opieferd).
 
