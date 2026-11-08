@@ -4,6 +4,11 @@
 
 By [opieferd](https://github.com/opieferd).
 
+## Preview
+
+![workflowMode running on macOS](assets/workflow-preview.gif)
+
+
 Keep Claude Code, Codex, builds, downloads, and other tools running while the Mac's built-in display is dimmed to **0%**, its keyboard backlight is off, and `caffeinate` prevents idle sleep. Ordinary mouse and keyboard input is filtered for up to 60 minutes to avoid accidental interference.
 
 > This can save **display and keyboard-backlight power**, but it does **not** minimize total system power: AI workloads still use CPU/GPU and network power, and `caffeinate` prevents the Mac from entering idle sleep.
