@@ -1,0 +1,87 @@
+name: Publish platform releases
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "workflow.py"
+      - "workflow_linux.py"
+      - "workflow_windows.py"
+      - "requirements.txt"
+      - "requirements_linux.txt"
+      - "requirements_windows.txt"
+      - "README.md"
+      - ".github/workflows/platform-releases.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: workflowmode-platform-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Package and publish macOS, Linux, Windows
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check script syntax
+        run: python3 -m py_compile workflow.py workflow_linux.py workflow_windows.py
+
+      - name: Build platform-specific source ZIPs
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+          groups = {
+              "macos": ("workflow.py", "requirements.txt", "README.md", "LICENSE"),
+              "linux": ("workflow_linux.py", "requirements_linux.txt", "README.md", "LICENSE"),
+              "windows": ("workflow_windows.py", "requirements_windows.txt", "README.md", "LICENSE"),
+          }
+          out = Path("dist")
+          out.mkdir(exist_ok=True)
+          for platform, files in groups.items():
+              archive = out / f"workflowMode-{platform}.zip"
+              with ZipFile(archive, "w", ZIP_DEFLATED) as zf:
+                  for filename in files:
+                      zf.write(filename, filename)
+              print(archive, archive.stat().st_size, "bytes")
+          PY
+
+      - name: Publish three GitHub releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for platform in macos linux windows; do
+            tag="v1.0.0-${platform}"
+            case "${platform}" in
+              macos)
+                label="macOS"
+                notes="workflowMode 1.0.0 for macOS. M2 MacBook Air implementation with BetterDisplay, kbdlight, Quartz, caffeinate and automatic output-audio mute/restore."
+                ;;
+              linux)
+                label="Linux"
+                notes="workflowMode 1.0.0 Linux preview. Uses brightnessctl, PipeWire/PulseAudio mute, systemd-inhibit and timed X11 grabs. Wayland input locking is not supported. Hardware test required."
+                ;;
+              windows)
+                label="Windows"
+                notes="workflowMode 1.0.0 Windows preview. Uses built-in laptop WMI display control, Pycaw mute, SetThreadExecutionState and low-level input hooks. External monitors and keyboard backlights not supported. Hardware test required."
+                ;;
+            esac
+            asset="dist/workflowMode-${platform}.zip"
+            if gh release view "${tag}" >/dev/null 2>&1; then
+              gh release upload "${tag}" "${asset}" --clobber
+              echo "Updated asset on existing ${tag}"
+            else
+              gh release create "${tag}" "${asset}" \
+                --target "${GITHUB_SHA}" \
+                --title "workflowMode v1.0.0 — ${label}" \
+                --notes "${notes}"
+              echo "Published ${tag}"
+            fi
+          done
