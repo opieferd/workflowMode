@@ -28,6 +28,8 @@ caffeinate = None
 old_screen = None
 old_keyboard = None
 old_auto = None
+old_mute = None
+audio_changed = False
 screen_changed = False
 keyboard_changed = False
 
@@ -91,6 +93,18 @@ def get_auto():
     return None
 
 
+def get_output_mute():
+    """Read AppleScript output mute status without changing volume."""
+    value = command("osascript", "-e", "output muted of (get volume settings)")
+    if value.lower() not in ("true", "false"):
+        raise RuntimeError(f"Unexpected macOS output mute state: {value!r}")
+    return value.lower() == "true"
+
+
+def set_output_mute(muted):
+    command("osascript", "-e", f"set volume output muted {'true' if muted else 'false'}")
+
+
 def stop(*_):
     global running
     running = False
@@ -145,6 +159,12 @@ def unlock():
 
 def cleanup():
     unlock()
+    if audio_changed and old_mute is not None:
+        try:
+            set_output_mute(old_mute)
+            print("Audio mute state restored.", flush=True)
+        except Exception as exc:
+            print(f"Could not restore audio mute state: {exc}", flush=True)
     if screen_changed and old_screen is not None:
         try:
             set_screen(old_screen)
@@ -178,7 +198,7 @@ def cleanup():
 
 def main():
     global tap, source, caffeinate, old_screen, old_keyboard, old_auto
-    global screen_changed, keyboard_changed, input_locked
+    global screen_changed, keyboard_changed, input_locked, old_mute, audio_changed
 
     parser = argparse.ArgumentParser(
         description="Idle display dimming + caffeinate + timed input lock on macOS"
@@ -199,7 +219,8 @@ def main():
     old_screen = get_screen()
     old_keyboard = get_keyboard()
     old_auto = get_auto()
-    print(f"Display: {old_screen:.2f} | Keyboard: {old_keyboard:.2f}", flush=True)
+    old_mute = get_output_mute()
+    print(f"Display: {old_screen:.2f} | Keyboard: {old_keyboard:.2f} | Audio muted: {old_mute}", flush=True)
     if args.check:
         print("Dependency checks passed; no changes made.")
         return
@@ -234,12 +255,14 @@ def main():
     set_keyboard(DEFAULT_KEYBOARD_BRIGHTNESS)
     screen_changed = True
     set_screen(screen_level)
+    audio_changed = True
+    set_output_mute(True)
 
     deadline = time.monotonic() + timeout
     input_locked = True
     Quartz.CGEventTapEnable(tap, True)
     print("WORKFLOW MODE ACTIVE. Ctrl+C stops and restores settings.", flush=True)
-    print("Input unlocks on timeout; display and caffeinate continue.", flush=True)
+    print("Input unlocks on timeout; display, audio mute and caffeinate continue.", flush=True)
 
     while running:
         if input_locked and time.monotonic() >= deadline:
