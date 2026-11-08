@@ -244,14 +244,16 @@ def main():
         raise ctypes.WinError(ctypes.get_last_error())
     awake = True
 
-    # Install hooks before blackout. If either fails, don't change the display.
-    if not args.no_lock:
-        install_hooks()
-
     brightness_changed = True
     set_brightness(target)
     audio_changed = True
     volume_endpoint.SetMute(1, None)
+
+    # Low-level hooks need this thread's message pump. Install only after
+    # potentially slow PowerShell brightness setup has finished, or Windows
+    # may silently disable the hooks for timing out.
+    if not args.no_lock:
+        install_hooks()
     print("WORKFLOW MODE ACTIVE. Control+C stops and restores settings.", flush=True)
     print("Windows display, sound and awake state remain changed after input timeout.", flush=True)
 
