@@ -27,7 +27,7 @@ Keep Claude Code, Codex, builds, downloads and other long-running jobs active wh
 
 ## Platform scripts
 
-- **macOS:** [`workflow.py`](workflow.py) and [`requirements.txt`](requirements.txt) — tested on the author's MacBook Air M2.
+- **macOS:** [`workflow.py`](workflow.py) and [`requirements.txt`](requirements.txt) — tested on my MacBook Air M2.
 - **Linux:** [`workflow_linux.py`](workflow_linux.py) and [`requirements_linux.txt`](requirements_linux.txt) — designed for modern systemd desktop Linux with controllable laptop backlight; input suppression on **X11 only**.
 - **Windows:** [`workflow_windows.py`](workflow_windows.py) and [`requirements_windows.txt`](requirements_windows.txt) — designed for Windows 10/11 laptops with a WMI-compatible internal screen; external monitors and keyboard backlights are **not universally supported**.
 
@@ -35,7 +35,7 @@ Each platform can be installed from the same repository. Platform-specific relea
 
 ## macOS requirements
 
-- macOS, developed on an **M2 MacBook Air** (other models may need adjustments)
+- macOS, developed on an **M2 MacBook Air**
 - [Homebrew](https://brew.sh/), Python 3, Node.js/npm
 - [BetterDisplay](https://betterdisplay.pro/) installed in `/Applications` (uses its built-in CLI; **no full Xcode installation required**)
 - [macos-keyboard-backlight](https://www.npmjs.com/package/macos-keyboard-backlight), providing `kbdlight`
