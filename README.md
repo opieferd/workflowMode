@@ -7,7 +7,7 @@ By [opieferd](https://github.com/opieferd).
 
 Keep Claude Code, Codex, builds, downloads and other long-running jobs active while **dimming the built-in display, muting audio output, and preventing idle sleep**. On supported desktops, ordinary keyboard and mouse input is filtered for up to **60 minutes**, then released while the workflow keeps running.
 
-> **Power savings:** This reduces display/backlight consumption, not total system power. AI workloads continue consuming resources; intentionally preventing sleep uses more power than letting the computer suspend. **macOS is field-tested on the author's M2; Linux and Windows versions are new and not yet hardware-verified.**
+> **Power savings:** This reduces display/backlight consumption, not total system power. AI workloads continue consuming resources; intentionally preventing sleep uses more power than letting the computer suspend. However, this tool allows for prioritizing power draw while running AI tools. **macOS is field-tested on my M2**
 
 ## Features & platform support
 
